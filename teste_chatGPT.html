@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Fernando Almeida Barbalho">
+
+<title>Estatais de estados e uma análise de regressão</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="teste_chatGPT_files/libs/clipboard/clipboard.min.js"></script>
+<script src="teste_chatGPT_files/libs/quarto-html/quarto.js"></script>
+<script src="teste_chatGPT_files/libs/quarto-html/popper.min.js"></script>
+<script src="teste_chatGPT_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="teste_chatGPT_files/libs/quarto-html/anchor.min.js"></script>
+<link href="teste_chatGPT_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="teste_chatGPT_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="teste_chatGPT_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="teste_chatGPT_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="teste_chatGPT_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Estatais de estados e uma análise de regressão</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Fernando Almeida Barbalho </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<style>
+div.comment {
+background-color: #DBDBDB;
+padding: 10px;
+border: 1px solid black;
+margin-left: 25px;
+border-radius: 5px;
+font-style: italic;
+}
+
+</style>
+<section id="alguns-testes-com-chatgpt" class="level2">
+<h2 class="anchored" data-anchor-id="alguns-testes-com-chatgpt">Alguns testes com chatGPT</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggbeeswarm)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(colorspace)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rattle)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>quadro_estatais_2022_v4 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"quadro_estatais_2022_v4.xlsx"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>quadro_estatais_2022_v4 <span class="ot">&lt;-</span> janitor<span class="sc">::</span><span class="fu">clean_names</span>(quadro_estatais_2022_v4)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Cálculo de rentabilidade</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>quadro_estatais_2022_v4<span class="sc">$</span>rentabilidade<span class="ot">&lt;-</span> </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  quadro_estatais_2022_v4<span class="sc">$</span>lucro_prejuizo_liquido_do_exercicio<span class="sc">/</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  quadro_estatais_2022_v4<span class="sc">$</span>patrimonio_liquido</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#Delimitando as estatais que serão úteis para o cálculo de rentabilidade </span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>estatais_trabalho<span class="ot">&lt;-</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  quadro_estatais_2022_v4 <span class="sc">%&gt;%</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.nan</span>(rentabilidade),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.infinite</span>(rentabilidade))</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>estatais_trabalho<span class="ot">&lt;-</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>estatais_trabalho <span class="sc">%&gt;%</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">possui_comite_de_autidoria =</span> <span class="fu">str_to_upper</span>(possui_comite_de_autidoria))</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>estatais_trabalho<span class="ot">&lt;-</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  estatais_trabalho <span class="sc">%&gt;%</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">possui_estrutura_governanca_completa=</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>           <span class="fu">case_when</span>(</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>             possui_conselho_de_administracao<span class="sc">==</span><span class="st">"SIM"</span> <span class="sc">&amp;</span> possui_conselho_fiscal<span class="sc">==</span><span class="st">"SIM"</span> <span class="sc">&amp;</span> possui_comite_de_autidoria <span class="sc">==</span><span class="st">"SIM"</span><span class="sc">~</span> <span class="st">"SIM"</span>,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>             <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"NÃO"</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>           ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Fiz o gráfico abaixo procurando mostrar como se dá a relação entre receita líquida operacional e rentabilidade de empresas estatais dos estados brasileiros</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a> estatais_trabalho <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">endividamento  =</span>  passivos_exercicio<span class="sc">/</span>patrimonio_liquido,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">sinal=</span> <span class="fu">ifelse</span>(rentabilidade<span class="sc">&gt;</span><span class="dv">0</span>, <span class="st">"Rentabilidade positiva"</span>,<span class="st">"Rentabilidade negativa"</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">rentabilidade =</span> rentabilidade <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>((patrimonio_liquido<span class="sc">&gt;=</span><span class="dv">0</span> <span class="sc">&amp;</span> lucro_prejuizo_liquido_do_exercicio<span class="sc">!=</span><span class="dv">0</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>         receita_liquida_operacional <span class="sc">&gt;</span><span class="dv">0</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>         <span class="fu">between</span>(rentabilidade, <span class="sc">-</span><span class="dv">100</span>,<span class="dv">100</span>) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span> receita_liquida_operacional, <span class="at">y=</span>rentabilidade))<span class="sc">+</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">fill=</span>  sinal), <span class="at">pch=</span> <span class="dv">21</span>, <span class="at">color =</span> <span class="st">"#575756"</span>, <span class="at">size =</span> <span class="dv">2</span>)<span class="sc">+</span> </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete_qualitative</span>(<span class="at">palette =</span> <span class="st">"Pastel 1"</span>) <span class="sc">+</span>    </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_quasirandom(aes(fill=  rentabilidade), pch= 21, color = "#575756", size = 2)+</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#scale_fill_continuous_diverging(palette = "Cyan_Magenta", rev = TRUE ) +</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_text_repel(data = estatais_top_rentabilidade, aes(label= sigla, color= rentabilidade), size =3)+</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>()<span class="sc">+</span>  </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">#scale_y_log10(trans = "pseudo_log")+</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#575756"</span>),</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">x=</span> <span class="st">"Receita líquida operacional"</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">y=</span> <span class="st">"Rentabilidade"</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"sinal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="teste_chatGPT_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Utilizando linguagem de programação elaborei um texto que faz uma demanda para o chatGPT. Nesse texto estãos:</p>
+<ul>
+<li><p>Caracterização da origem dos dados</p></li>
+<li><p>Caracterização dos dados</p></li>
+<li><p>Filtros aplicados</p></li>
+<li><p>Representação dos dados a partir de variáveis agregadas tendo como referência uma variável categórica : contagem de empresas para cada uma das categorias, valores máximo e mínimo de rentabilidade para cada uma das categorias e valores máximo e mínimo de receita líquida operacional para cada uma das categorias</p></li>
+</ul>
+<p>O texto gerado que demanda a análise do gráfico é esse logo abaixo.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dados_grafico<span class="ot">&lt;-</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  estatais_trabalho <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sinal=</span> <span class="fu">ifelse</span>(rentabilidade<span class="sc">&gt;</span><span class="dv">0</span>, <span class="st">"Rentabilidade positiva"</span>,<span class="st">"Rentabilidade negativa"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rentabilidade =</span> rentabilidade <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">resultado_exercicio =</span> lucro_prejuizo_liquido_do_exercicio )<span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>((patrimonio_liquido<span class="sc">&gt;=</span><span class="dv">0</span> <span class="sc">&amp;</span> lucro_prejuizo_liquido_do_exercicio<span class="sc">!=</span><span class="dv">0</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>         receita_liquida_operacional <span class="sc">&gt;</span><span class="dv">0</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>         <span class="fu">between</span>(rentabilidade, <span class="sc">-</span><span class="dv">200</span>,<span class="dv">200</span>) ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(sigla, uf, rentabilidade, resultado_exercicio,  patrimonio_liquido, sinal ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">arrange</span>(rentabilidade)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>str_info_tabela<span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">texto=</span><span class="fu">character</span>(<span class="dv">6</span>))</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>str_info_tabela<span class="sc">$</span>texto[<span class="dv">1</span>]<span class="ot">&lt;-</span> <span class="st">"Foi preprado um gráfico que avalia o impacto das receitas operacionais sobre a rentabilidade de empresas estatais dos estados brasileiros."</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>str_info_tabela<span class="sc">$</span>texto[<span class="dv">2</span>]<span class="ot">&lt;-</span> <span class="st">"Nos dados utilizados para gerar o gráfico as colunas relacionadas a resultado do exercício estão representadas por valores em reais e às referentes à coluna rentabilidade estão expressa em valores percentuais."</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>str_info_tabela<span class="sc">$</span>texto[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"Foram aplicados os seguintes filtros: patrimonio_liquido&gt;0 &amp; lucro_prejuizo_liquido_do_exercicio!=0),receita_liquida_operacional &gt;0 "</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>str_info_tabela<span class="sc">$</span>texto[<span class="dv">4</span>]<span class="ot">&lt;-</span> <span class="st">"A rentabilidade é calculada a partir da divisão do resultado do exercício pelo patrimônio líquido"</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>str_info_tabela<span class="sc">$</span>texto[<span class="dv">5</span>]<span class="ot">&lt;-</span> <span class="st">"Os dados são de 2021 e estão disponíveis a partir do seguinte endereço: https://tesouro.github.io/empresas-estados/ "</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>str_info_tabela<span class="sc">$</span>texto[<span class="dv">6</span>]<span class="ot">&lt;-</span> <span class="st">"Escreva um texto de blog explicando o gráfico considerando as informações indicadas logo acima e os dados resultantes de agregações que vêm logo a seguir"</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>dados_grafico_sumarizados<span class="ot">&lt;-</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  dados_grafico <span class="sc">%&gt;%</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sinal) <span class="sc">%&gt;%</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">quantidade_empresas =</span> <span class="fu">n</span>(),</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    rentabilidade_máxima <span class="ot">=</span> <span class="fu">max</span>(rentabilidade),</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    rentabilidade_mínima <span class="ot">=</span> <span class="fu">min</span>(rentabilidade),</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">resultado_exercicio_maximo =</span> <span class="fu">max</span>(resultado_exercicio),</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">resultado_exercicio_minimo =</span> <span class="fu">min</span>(resultado_exercicio)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>str_names_colunas<span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">texto=</span> <span class="fu">str_c</span>(<span class="fu">names</span>(dados_grafico_sumarizados), <span class="at">collapse =</span> <span class="st">","</span>))</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>string_df<span class="ot">&lt;-</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map_dfr</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">NROW</span>(dados_grafico_sumarizados), <span class="cf">function</span>(num_linha){</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">texto=</span><span class="fu">str_c</span>(dados_grafico_sumarizados[num_linha,], <span class="at">collapse =</span> <span class="st">","</span>))</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>texto_gpt<span class="ot">&lt;-</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>  str_info_tabela <span class="sc">%&gt;%</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(str_names_colunas,</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>            string_df)</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(texto_gpt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> texto </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Foi preprado um gráfico que avalia o impacto das receitas operacionais sobre a rentabilidade de empresas estatais dos estados brasileiros. </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Nos dados utilizados para gerar o gráfico as colunas relacionadas a resultado do exercício estão representadas por valores em reais e às referentes à coluna rentabilidade estão expressa em valores percentuais. </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Foram aplicados os seguintes filtros: patrimonio_liquido&gt;0 &amp; lucro_prejuizo_liquido_do_exercicio!=0),receita_liquida_operacional &gt;0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> A rentabilidade é calculada a partir da divisão do resultado do exercício pelo patrimônio líquido </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Os dados são de 2021 e estão disponíveis a partir do seguinte endereço: https://tesouro.github.io/empresas-estados/ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Escreva um texto de blog explicando o gráfico considerando as informações indicadas logo acima e os dados resultantes de agregações que vêm logo a seguir </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> sinal,quantidade_empresas,rentabilidade_máxima,rentabilidade_mínima,resultado_exercicio_maximo,resultado_exercicio_minimo </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Rentabilidade negativa,58,-0.21390770130872,-193.377713082001,-1613.41,-759405233 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Rentabilidade positiva,152,190.490287684198,0.0027894601321775,5048599696.83,1300 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</section>
+<section id="a-resposta-do-chatgpt" class="level2">
+<h2 class="anchored" data-anchor-id="a-resposta-do-chatgpt">A resposta do chatGPT</h2>
+<p>Copiei e colei no chatGPT o texto gerado logo acima. O resultado da análise feita pelo chatGPT é esse logo abaixo.</p>
+<div class="comment">
+<p>O gráfico que avalia o impacto das receitas operacionais sobre a rentabilidade de empresas estatais dos estados brasileiros oferece uma visão geral do desempenho dessas empresas em relação a essas duas variáveis. As informações utilizadas para gerar o gráfico incluem os dados de receita líquida operacional, resultado do exercício e patrimônio líquido, que são três indicadores-chave da saúde financeira de uma empresa.</p>
+<p>Os filtros aplicados aos dados para gerar o gráfico garantem que apenas empresas com patrimônio líquido positivo e lucro ou prejuízo líquido do exercício diferentes de zero foram consideradas, juntamente com a exigência de que a receita líquida operacional fosse maior que zero. Esses filtros são importantes para garantir que as empresas incluídas no gráfico sejam financeiramente saudáveis e ativas.</p>
+<p>A rentabilidade é um indicador importante do desempenho financeiro de uma empresa, e é calculada a partir da divisão do resultado do exercício pelo patrimônio líquido. O resultado do exercício representa o lucro ou prejuízo gerado pela empresa em um determinado período de tempo, enquanto o patrimônio líquido representa o valor contábil dos ativos da empresa menos as suas obrigações.</p>
+<p>O gráfico mostra a relação entre a receita operacional e a rentabilidade das empresas estatais dos estados brasileiros. Quanto maior a receita operacional, maior é a rentabilidade da empresa, o que indica uma capacidade maior de gerar lucros. O gráfico permite comparar o desempenho das empresas com base na rentabilidade, o que é importante para avaliar a eficácia da gestão financeira.</p>
+<p>Os dados resultantes de agregações que vêm logo a seguir mostram que há 152 empresas com rentabilidade positiva e 58 empresas com rentabilidade negativa entre as empresas estatais dos estados brasileiros. A rentabilidade mínima registrada foi de -193,38%, enquanto a rentabilidade máxima foi de 190,49%. Já o resultado do exercício máximo registrado foi de 5.048.599.696,83 reais, enquanto o mínimo foi de -759.405.233 reais.</p>
+<p>Esses dados ajudam a compreender melhor o desempenho das empresas estatais dos estados brasileiros em relação à rentabilidade. É importante ressaltar que a rentabilidade negativa indica prejuízo, enquanto a rentabilidade positiva indica lucro, e que os valores extremos podem indicar problemas financeiros ou oportunidades de investimento. O gráfico e as informações adicionais fornecem uma visão geral útil do desempenho financeiro dessas empresas e podem ser usados para orientar decisões de investimento e gerenciamento.</p>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
